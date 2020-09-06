@@ -5,7 +5,9 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
-const jwt = require('koa-jwt')
+const {
+  SESSION_SECRECT_KEY
+} = require('./conf/secrectKeys')
 
 const {
   idProd,
@@ -13,8 +15,9 @@ const {
 } = require('./util/env')
 
 const index = require('./routes/index')
+const user = require('./routes/view/user')
 const error = require('./routes/view/error')
-
+const userApi = require('./routes/api/user')
 // app.use(jwt())
 
 // error handler 
@@ -48,6 +51,9 @@ app.use(views(__dirname + '/views', {
 
 // routes
 app.use(index.routes(), index.allowedMethods())
+app.use(user.routes(), user.allowedMethods())
+//api
+app.use(userApi.routes(), userApi.allowedMethods())
 //404路由应该注册到最下面 
 app.use(error.routes(), error.allowedMethods())
 

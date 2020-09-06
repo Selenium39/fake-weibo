@@ -50,9 +50,9 @@
             processData: false,
             data: formData,
             success: function(res) {
-                if (res.errno !== 0) {
+                if (res.errCode !== 0) {
                     // 错误
-                    callback(res.message)
+                    callback(res.msg)
                     return
                 }
                 // 正确
@@ -60,7 +60,7 @@
             },
             error: function(error) {
                 // 错误
-                callback(error.message)
+                callback(error.msg)
             }
         })
     }
@@ -73,9 +73,9 @@
             contentType: 'application/json;charset=UTF-8',
             data: params ? JSON.stringify(params) : '',
             success: function(res) {
-                if (res.errno !== 0) {
+                if (res.errCode !== 0) {
                     // 错误
-                    callback(res.message)
+                    callback(res.msg)
                     return
                 }
                 // 正确
@@ -83,7 +83,7 @@
             },
             error: function(error) {
                 // 错误
-                callback(error.message)
+                callback(error.msg)
             }
         })
     }
