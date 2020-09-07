@@ -9,15 +9,20 @@ const {
   SESSION_SECRECT_KEY
 } = require('./conf/secrectKeys')
 
+const redisStore = require('koa-redis')
+const session = require('koa-generic-session')
+
 const {
   idProd,
   isProd
 } = require('./util/env')
 
-const index = require('./routes/index')
 const user = require('./routes/view/user')
 const error = require('./routes/view/error')
 const userApi = require('./routes/api/user')
+const {
+  REDIS_CONF
+} = require('./conf/db')
 // app.use(jwt())
 
 // error handler 
@@ -49,8 +54,24 @@ app.use(views(__dirname + '/views', {
 //   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 // })
 
+//session配置(session一定要放到router的前面，不然ctx没有session属性)
+app.keys = [SESSION_SECRECT_KEY]
+app.use(session({
+  key: 'weibo.sid', //default cookie name 'koa.sid'
+  prefix: 'weibo:sess:', //redis key prefix 'koa:sess:'
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 //ms
+  },
+  store: redisStore({
+    host: REDIS_CONF.host,
+    port: REDIS_CONF.port,
+    password: REDIS_CONF.password
+  })
+}))
+
 // routes
-app.use(index.routes(), index.allowedMethods())
 app.use(user.routes(), user.allowedMethods())
 //api
 app.use(userApi.routes(), userApi.allowedMethods())

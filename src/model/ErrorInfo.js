@@ -14,5 +14,9 @@ module.exports = {
     VALIDATE_ERROR: {
         errCode: -4,
         msg: '校验失败'
+    },
+    LOGIN_ERROR: {
+        errCode: -5,
+        msg: "登录失败"
     }
 }

@@ -11,7 +11,8 @@ const {
 const {
     USER_NO_EXIST,
     USER_ALREADY_EXIST,
-    REGISTER_ERROR
+    REGISTER_ERROR,
+    LOGIN_ERROR
 } = require('../model/ErrorInfo')
 
 const {
@@ -57,10 +58,24 @@ async function register({
         console.log(error.message, error.stack)
         return new ErrorResult(REGISTER_ERROR)
     }
+}
 
+async function login(ctx, userName, password) {
+    const userInfo = await getUserInfo(userName, doCrypto(password))
+    console.log('ctx', ctx)
+    console.log('userInfo', userInfo)
+    console.log('session', ctx.session)
+    if (!userInfo) {
+        return new ErrorResult(LOGIN_ERROR)
+    }
+    if (ctx.session.userInfo == null) {
+        ctx.session.userInfo = userInfo
+    }
+    return new SuccessResult()
 }
 
 module.exports = {
     isExist,
-    register
+    register,
+    login
 }
