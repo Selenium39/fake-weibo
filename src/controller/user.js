@@ -1,6 +1,7 @@
 const {
     getUserInfo,
-    createUser
+    createUser,
+    deleteUser
 } = require('../service/user')
 
 const {
@@ -62,9 +63,6 @@ async function register({
 
 async function login(ctx, userName, password) {
     const userInfo = await getUserInfo(userName, doCrypto(password))
-    console.log('ctx', ctx)
-    console.log('userInfo', userInfo)
-    console.log('session', ctx.session)
     if (!userInfo) {
         return new ErrorResult(LOGIN_ERROR)
     }
@@ -74,8 +72,17 @@ async function login(ctx, userName, password) {
     return new SuccessResult()
 }
 
+async function deleteCurUser(userName) {
+    const result = deleteUser(userName)
+    if (result) {
+        return new SuccessResult()
+    }
+    return new ErrorResult(USER_NO_EXIST)
+}
+
 module.exports = {
     isExist,
     register,
-    login
+    login,
+    deleteCurUser
 }
