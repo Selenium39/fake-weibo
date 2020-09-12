@@ -18,5 +18,9 @@ module.exports = {
     LOGIN_ERROR: {
         errCode: -5,
         msg: "登录失败"
+    },
+    UNLOGIN_ERROR: {
+        errCode: -6,
+        msg: '尚未登录'
     }
 }
