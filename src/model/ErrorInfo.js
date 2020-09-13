@@ -26,5 +26,9 @@ module.exports = {
     UPLOAD_FILE_TOO_LARGE: {
         errCode: -7,
         msg: '上传文件体积过大'
+    },
+    UPDATE_USER_ERROR: {
+        errCode: -8,
+        msg: '修改用户信息失败'
     }
 }

@@ -3,7 +3,8 @@ const {
     isExist,
     register,
     login,
-    deleteCurUser
+    deleteCurUser,
+    changeInfo
 } = require('../../controller/user')
 const {
     userValidate
@@ -59,6 +60,19 @@ router.post('/delete', loginCheck, async (ctx, next) => { //加上登录校验�
         } = ctx.session.userInfo
         ctx.body = await deleteCurUser(userName)
     }
+})
+
+router.patch('/changeInfo', loginCheck, genValidator(userValidate), async (ctx, next) => {
+    const {
+        nickName,
+        city,
+        picture
+    } = ctx.request.body
+    ctx.body = await changeInfo(ctx, {
+        nickName,
+        city,
+        picture
+    })
 })
 
 module.exports = router

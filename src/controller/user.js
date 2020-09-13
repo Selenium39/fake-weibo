@@ -1,7 +1,8 @@
 const {
     getUserInfo,
     createUser,
-    deleteUser
+    deleteUser,
+    updateUser
 } = require('../service/user')
 
 const {
@@ -13,12 +14,14 @@ const {
     USER_NO_EXIST,
     USER_ALREADY_EXIST,
     REGISTER_ERROR,
-    LOGIN_ERROR
+    LOGIN_ERROR,
+    UPDATE_USER_ERROR
 } = require('../model/ErrorInfo')
 
 const {
     doCrypto
 } = require('../util/crypto')
+
 /**
  * 
  * @param {用户名} userName 
@@ -80,9 +83,41 @@ async function deleteCurUser(userName) {
     return new ErrorResult(USER_NO_EXIST)
 }
 
+async function changeInfo(ctx, {
+    nickName,
+    city,
+    picture
+}) {
+    const {
+        userName
+    } = ctx.session.userInfo
+    if (!nickName) {
+        nickName = userName
+    }
+    const result = await updateUser({
+        newNickName: nickName,
+        newCity: city,
+        newPicture: picture
+    }, {
+        userName
+    })
+    if (result) {
+        //更新成功，修改session中的userInfo
+        Object.assign(ctx.session.userInfo, {
+            nickName,
+            city,
+            picture
+        })
+        return new SuccessResult()
+    }
+    return new ErrorResult(UPDATE_USER_ERROR)
+
+}
+
 module.exports = {
     isExist,
     register,
     login,
-    deleteCurUser
+    deleteCurUser,
+    changeInfo
 }
