@@ -15,7 +15,8 @@ const {
     USER_ALREADY_EXIST,
     REGISTER_ERROR,
     LOGIN_ERROR,
-    UPDATE_USER_ERROR
+    UPDATE_USER_ERROR,
+    UPDATE_PASSWORD_ERROR
 } = require('../model/ErrorInfo')
 
 const {
@@ -111,13 +112,33 @@ async function changeInfo(ctx, {
         return new SuccessResult()
     }
     return new ErrorResult(UPDATE_USER_ERROR)
-
 }
+
+async function changePassword(userName, password, newPassword) {
+    const result = await updateUser({
+        newPassword: doCrypto(newPassword)
+    }, {
+        userName,
+        password: doCrypto(password)
+    })
+    if (result) {
+        return new SuccessResult()
+    }
+    return new ErrorResult(UPDATE_PASSWORD_ERROR)
+}
+
+async function logout(ctx) {
+    delete ctx.session.userInfo
+    return new SuccessResult()
+}
+
 
 module.exports = {
     isExist,
     register,
     login,
     deleteCurUser,
-    changeInfo
+    changeInfo,
+    changePassword,
+    logout
 }

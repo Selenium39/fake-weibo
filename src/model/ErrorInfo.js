@@ -30,5 +30,9 @@ module.exports = {
     UPDATE_USER_ERROR: {
         errCode: -8,
         msg: '修改用户信息失败'
+    },
+    UPDATE_PASSWORD_ERROR:{
+        errCode:-9,
+        msg:'修改密码失败'
     }
 }
