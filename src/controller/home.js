@@ -11,6 +11,8 @@ const {
     createBlog
 } = require("../service/blog")
 
+const xss = require('xss')
+
 async function create({
     userId,
     content,
@@ -20,7 +22,7 @@ async function create({
         //创建微博
         const blog = await createBlog({
             userId,
-            content,
+            content: xss(content),//进行xss过滤，防止xss攻击
             image
         })
         return new SuccessResult(blog)
