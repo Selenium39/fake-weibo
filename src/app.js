@@ -12,6 +12,8 @@ const {
 const redisStore = require('koa-redis')
 const session = require('koa-generic-session')
 
+const path = require('path')
+
 const {
   idProd,
   isProd
@@ -20,6 +22,7 @@ const {
 const user = require('./routes/view/user')
 const error = require('./routes/view/error')
 const userApi = require('./routes/api/user')
+const utilApi = require('./routes/api/utils')
 const {
   REDIS_CONF
 } = require('./conf/db')
@@ -40,7 +43,10 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
+
+//向外暴露的静态文件
 app.use(require('koa-static')(__dirname + '/public'))
+app.use(require('koa-static')(path.join(__dirname, '..', 'uploadFiles'))) //不能直接通过字符串拼接，需要使用path.join()函数拼接
 
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
@@ -75,6 +81,7 @@ app.use(session({
 app.use(user.routes(), user.allowedMethods())
 //api
 app.use(userApi.routes(), userApi.allowedMethods())
+app.use(utilApi.routes(), utilApi.allowedMethods())
 //404路由应该注册到最下面 
 app.use(error.routes(), error.allowedMethods())
 

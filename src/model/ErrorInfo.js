@@ -22,5 +22,9 @@ module.exports = {
     UNLOGIN_ERROR: {
         errCode: -6,
         msg: '尚未登录'
+    },
+    UPLOAD_FILE_TOO_LARGE: {
+        errCode: -7,
+        msg: '上传文件体积过大'
     }
 }
