@@ -31,8 +31,12 @@ module.exports = {
         errCode: -8,
         msg: '修改用户信息失败'
     },
-    UPDATE_PASSWORD_ERROR:{
-        errCode:-9,
-        msg:'修改密码失败'
+    UPDATE_PASSWORD_ERROR: {
+        errCode: -9,
+        msg: '修改密码失败'
+    },
+    CREATE_BLOG_ERROR: {
+        errCode: -10,
+        msg: '创建微博失败'
     }
 }

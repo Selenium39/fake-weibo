@@ -16,6 +16,9 @@ router.prefix('/api/utils')
 //上传图片
 router.post('/upload', loginCheck, koaForm(), async (ctx, next) => { //路由中可以添加多个middleware
     const file = ctx.req.files['file'] //上传文件的key为file
+    if (!file) { //如果文件为空，直接返回
+        return;
+    }
     const {
         size,
         path,
