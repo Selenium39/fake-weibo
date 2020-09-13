@@ -4,6 +4,12 @@
 
 const router = require('koa-router')()
 const {
+    blogValidate
+} = require('../../validator/blog')
+const {
+    genValidator
+} = require('../../middleware/validator')
+const {
     loginCheck
 } = require('../../middleware/loginChecks')
 const {
@@ -12,7 +18,7 @@ const {
 
 router.prefix('/api/blog')
 
-router.post('/create', loginCheck, async (ctx, next) => {
+router.post('/create', loginCheck, genValidator(blogValidate), async (ctx, next) => {
     const {
         content,
         image
