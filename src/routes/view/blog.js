@@ -13,7 +13,12 @@ const {
 const {
     isExist
 } = require('../../controller/user')
-const { getSquareBlogList } = require('../../controller/square')
+const {
+    getSquareBlogList
+} = require('../../controller/square')
+const {
+    getFans
+} = require('../../controller/relation')
 
 //首页
 router.get('/', loginRedirect, async (ctx, next) => {
@@ -57,6 +62,13 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
         pageIndex,
         count
     } = result.data
+
+    //获取粉丝
+    const fansResult = await getFans(curUserInfo.id)
+    const {
+        count: fansCount,
+        fansList
+    } = fansResult.data
     await ctx.render('profile', {
         blogData: {
             isEmpty,
@@ -67,7 +79,15 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
         },
         userData: {
             userInfo: curUserInfo,
-            isMe
+            isMe,
+            fansData: {
+                count: fansCount,
+                list: fansList
+            },
+            followersData: {
+                count: 0,
+                list: []
+            }
         }
     })
 })
@@ -93,7 +113,6 @@ router.get('/square', async (ctx, next) => {
             count
         }
     })
-
 })
 
 module.exports = router
