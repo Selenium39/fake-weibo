@@ -25,6 +25,7 @@ const blog = require('./routes/view/blog')
 const userApi = require('./routes/api/user')
 const utilApi = require('./routes/api/utils')
 const homeApi = require('./routes/api/home')
+const profileApi = require('./routes/api/profile')
 const {
   REDIS_CONF
 } = require('./conf/db')
@@ -86,6 +87,7 @@ app.use(blog.routes(), blog.allowedMethods())
 app.use(userApi.routes(), userApi.allowedMethods())
 app.use(utilApi.routes(), utilApi.allowedMethods())
 app.use(homeApi.routes(), homeApi.allowedMethods())
+app.use(profileApi.routes(), profileApi.allowedMethods())
 //404路由应该注册到最下面 
 app.use(error.routes(), error.allowedMethods())
 

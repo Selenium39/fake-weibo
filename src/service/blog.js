@@ -17,7 +17,7 @@ async function createBlog({
 }
 
 const {
-    formatUser
+    formatUser,formatBlog
 } = require('./format')
 
 
@@ -47,13 +47,18 @@ async function getBlogListByUser({
     })
     //result.count 总数
     //result.rows 查询结果 []
-
     let blogList = result.rows.map(row => row.dataValues) //获取所有Blog数据
+    //格式化blog
+    blogList = formatBlog(blogList)
     blogList = blogList.map(blogItem => { //获取每条Blog对应的User数据
         let user = blogItem.user.dataValues
         blogItem.user = formatUser(user)
+        return blogItem //这里不要忘了return 
     })
-    return blogList
+    return {
+        count: result.count,
+        blogList
+    }
 
 }
 

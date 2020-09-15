@@ -11,7 +11,7 @@ const {
 
 const {
     SuccessResult
-} = require('../model/ErrorInfo')
+} = require('../model/Result')
 
 async function getProfileBlogList(userName, pageIndex = 0) {
     const result = await getBlogListByUser({
