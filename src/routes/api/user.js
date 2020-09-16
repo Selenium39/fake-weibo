@@ -20,6 +20,9 @@ const {
 const {
     isTest
 } = require('../../util/env')
+const {
+    getFollowers
+} = require('../../controller/relation')
 
 
 
@@ -89,8 +92,23 @@ router.patch('/changePassword', loginCheck, genValidator(userValidate), async (c
 
 })
 
-router.post('/logout',loginCheck,async (ctx,next)=>{
+router.post('/logout', loginCheck, async (ctx, next) => {
     ctx.body = await logout(ctx);
+})
+
+//获取@列表,即关注人列表
+router.get('/getAtList', loginCheck, async (ctx, next) => {
+    const {
+        id: userId
+    } = ctx.session.userInfo
+    const result = await getFollowers(userId)
+    const {
+        followersList
+    } = result.data
+    const list = followersList.map(user => {
+        return `${user.nickName} - ${user.userName}`
+    })
+    ctx.body = list
 })
 
 module.exports = router
