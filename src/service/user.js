@@ -6,6 +6,10 @@ const {
     formatUser
 } = require('./format')
 
+const {
+    addFollower
+} = require('./relation')
+
 async function getUserInfo(userName, password) {
     let whereOpt = {
         userName
@@ -38,7 +42,11 @@ async function createUser({
         nickName: nickName ? nickName : userName,
         gender
     })
-    return result.dataValues
+    const data = result.dataValues
+
+    //自己关注自己，方便展示数据
+    addFollower(data.id, data.id)
+    return data
 }
 
 async function deleteUser(userName) {

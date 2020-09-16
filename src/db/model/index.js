@@ -18,6 +18,11 @@ User.hasMany(UserRelation, {
     foreignKey: 'userId'
 })
 
+Blog.belongsTo(UserRelation, {  //userId-->followerId
+    foreignKey: 'userId',
+    targetKey: 'followerId'  
+})
+
 // User->Blog
 // User.hasMany(Blog) 
 
