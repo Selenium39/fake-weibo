@@ -17,7 +17,7 @@ const {
     getSquareBlogList
 } = require('../../controller/square')
 const {
-    getFans
+    getFans,getFollowers
 } = require('../../controller/relation')
 
 //首页
@@ -69,6 +69,19 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
         count: fansCount,
         fansList
     } = fansResult.data
+
+    //获取关注人列表
+    const followersResult = await getFollowers(curUserInfo.id)
+    const {
+        count: followersCount,
+        followersList
+    } = followersResult.data
+
+    //我是否关注了此人
+    const amIFollowed = fansList.some(item => { //some函数检测是否有满足条件的item，只要有一个，就立即返回true
+        return item.userName === ctx.session.userInfo.userName
+    })
+
     await ctx.render('profile', {
         blogData: {
             isEmpty,
@@ -85,9 +98,11 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
                 list: fansList
             },
             followersData: {
-                count: 0,
-                list: []
-            }
+                count: followersCount,
+                list: followersList
+            },
+            amIFollowed
+
         }
     })
 })

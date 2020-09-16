@@ -38,5 +38,13 @@ module.exports = {
     CREATE_BLOG_ERROR: {
         errCode: -10,
         msg: '创建微博失败'
+    },
+    FOLLOW_ERROR: {
+        errCode: -11,
+        msg: '关注失败'
+    },
+    UN_FOLLOW_ERROR: {
+        errCode: -12,
+        msg: '取消关注失败'
     }
 }

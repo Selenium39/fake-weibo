@@ -36,6 +36,67 @@ async function getUsersByFollower(followerId) {
     }
 }
 
+
+async function getFollowersByUser(userId) {
+    const result = await UserRelation.findAndCountAll({
+        order: [
+            ['id', 'desc']
+        ],
+        include: [{
+            model: User,
+            attributes: ['id', 'userName', 'nickName', 'picture']
+        }],
+        where: {
+            userId
+        }
+    })
+    // result.count 总数
+    // result.rows 查询结果 ， 数组
+    // userList: 是UserRelation查询之后的结果
+    let userList = result.rows.map(row => row.dataValues)
+
+    // userList: 是User查询之后的结果
+    userList = userList.map(item => {
+        let user = item.user
+        user = user.dataValues
+        user = formatUser(user)
+        return user
+    })
+
+    return {
+        count: result.count,
+        userList
+    }
+}
+
+/**
+ * 
+ * @param {number} userId 
+ * @param {number} followerId '
+ * 添加关注关系
+ */
+async function addFollower(userId, followerId) {
+    const result = await UserRelation.create({
+        userId,
+        followerId
+    })
+    return result.dataValues
+
+}
+
+async function deleteFollower(userId, followerId) {
+    const result = await UserRelation.destroy({
+        where: {
+            userId,
+            followerId
+        }
+    })
+    return result > 0
+}
+
 module.exports = {
-    getUsersByFollower
+    getUsersByFollower,
+    getFollowersByUser,
+    addFollower,
+    deleteFollower
 }
