@@ -5,6 +5,7 @@
 const User = require('./User')
 const Blog = require('./Blog')
 const UserRelation = require('./UserRelation')
+const AtRelation = require('./AtRelation')
 
 //User一对多Blog Blog-->User
 Blog.belongsTo(User, {
@@ -23,11 +24,16 @@ Blog.belongsTo(UserRelation, {  //userId-->followerId
     targetKey: 'followerId'  
 })
 
+Blog.hasMany(AtRelation,{
+    foreignKey:'blogId'
+})
+
 // User->Blog
 // User.hasMany(Blog) 
 
 module.exports = {
     User,
     Blog,
-    UserRelation
+    UserRelation,
+    AtRelation
 }

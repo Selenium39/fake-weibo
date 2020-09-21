@@ -25,6 +25,13 @@ const {
     getHomeBlogList
 } = require('../../controller/home')
 
+const {
+    getAtMeCount,
+    getAtMeBlogList,
+    markAsRead
+} = require('../../controller/at')
+
+
 //首页
 router.get('/', loginRedirect, async (ctx, next) => {
     const userInfo = ctx.session.userInfo
@@ -57,6 +64,12 @@ router.get('/', loginRedirect, async (ctx, next) => {
         followersList
     } = followersResult.data
 
+    //获取自己被@数量
+    const atCountResult = await getAtMeCount(userId)
+    const {
+        count: atCount
+    } = atCountResult.data
+
     await ctx.render('index', {
         userData: {
             userInfo,
@@ -68,7 +81,7 @@ router.get('/', loginRedirect, async (ctx, next) => {
                 count: followersCount,
                 list: followersList
             },
-            // atCount
+            atCount
         },
         blogData: {
             isEmpty,
@@ -137,6 +150,12 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
         return item.userName === ctx.session.userInfo.userName
     })
 
+    //获取自己被@数量
+    const atCountResult = await getAtMeCount(ctx.session.userInfo.id)
+    const {
+        count: atCount
+    } = atCountResult.data
+
     await ctx.render('profile', {
         blogData: {
             isEmpty,
@@ -156,8 +175,8 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
                 count: followersCount,
                 list: followersList
             },
-            amIFollowed
-
+            amIFollowed,
+            atCount
         }
     })
 })
@@ -183,6 +202,44 @@ router.get('/square', async (ctx, next) => {
             count
         }
     })
+})
+
+//atMe
+router.get('/at-me', loginRedirect, async (ctx, next) => {
+    const {
+        id: userId
+    } = ctx.session.userInfo
+
+    //获取自己被@数量
+    const atCountResult = await getAtMeCount(userId)
+    const {
+        count: atCount
+    } = atCountResult.data
+
+    //获取第一页列表
+    const result = await getAtMeBlogList(userId)
+    const {
+        isEmpty,
+        blogList,
+        pageSize,
+        pageIndex,
+        count
+    } = result.data
+
+    await ctx.render('atMe', {
+        atCount,
+        blogData: {
+            isEmpty,
+            blogList,
+            pageSize,
+            pageIndex,
+            count
+        }
+    })
+    //标记为已读
+    if (atCount > 0) {
+        await markAsRead(userId)
+    }
 })
 
 module.exports = router
