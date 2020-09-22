@@ -1,2 +1,6 @@
 Executing (default): SELECT 1+1 AS result
 connect success
+Executing (default): SELECT 1+1 AS result
+connect success
+Executing (default): SELECT 1+1 AS result
+connect success
